@@ -10,23 +10,22 @@ import SwiftData
 
 @main
 struct EchoOfLifeApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+    private let persistenceController: PersistenceController
+    private let lifeItemRepository: LifeItemRepository
 
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
+    init() {
+        let persistenceController = PersistenceController()
+        
+        self.persistenceController = persistenceController
+        self.lifeItemRepository = SwiftDataLifeItemRepository(
+            modelContext: persistenceController.mainContext
+        )
+    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(lifeItemRepository: lifeItemRepository)
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(persistenceController.container)
     }
 }
