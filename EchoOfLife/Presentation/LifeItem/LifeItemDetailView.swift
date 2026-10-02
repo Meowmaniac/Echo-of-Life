@@ -44,7 +44,17 @@ struct LifeItemDetailView: View {
                             Text(lifeItem.createdAt, format: .dateTime.day().month().year())
                                 .foregroundStyle(.secondary)
                         }
-                        
+                        if let occurredAt = lifeItem.occurredAt {
+                            HStack {
+                                Label("Occured", systemImage: "checkmark.circle")
+                                
+                                Spacer()
+                                
+                                Text(occurredAt, format: .dateTime.day().month().year())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    
                         if lifeItem.isAchievement {
                             Label("Achievement", systemImage: "star.fill")
                         }

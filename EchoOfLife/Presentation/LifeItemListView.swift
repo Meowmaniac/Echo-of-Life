@@ -36,11 +36,20 @@ struct LifeItemListView: View {
                                 Text(lifeItem.title)
                                 Text(lifeItem.type.rawValue)
                                     .foregroundStyle(.secondary)
+                                Text(lifeItem.occurredAt == nil ? lifeItem.createdAt : lifeItem.occurredAt!, format: .dateTime.day().month().year())
+                                    .foregroundStyle(.secondary)
                             }
                             Spacer()
-                            if lifeItem.isAchievement {
-                                Image(systemName: "star.fill")
+                            Button {
+                                lifeItem.isAchievement.toggle()
+                            } label: {
+                                Image(
+                                    systemName: lifeItem.isAchievement
+                                        ? "star.fill"
+                                        : "star"
+                                )
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                 }

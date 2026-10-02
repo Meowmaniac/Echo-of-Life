@@ -14,6 +14,8 @@ struct LifeItemCreateView: View {
     @State private var details = ""
     @State private var type: LifeItemType = .experience
     @State private var isAchievement = false
+    @State private var isOccured = false
+    @State private var dateOccurred = Date()
 
     let onSave: (LifeItem) -> Void
 
@@ -43,6 +45,10 @@ struct LifeItemCreateView: View {
                     }
 
                     Toggle("Achievement", isOn: $isAchievement)
+                    Toggle("Occured", isOn: $isOccured)
+                    if isOccured {
+                        DatePicker("Date", selection: $dateOccurred, displayedComponents: .date)
+                    }
                 }
             }
             .navigationTitle("New Life Item")
@@ -59,6 +65,7 @@ struct LifeItemCreateView: View {
                             type: type,
                             title: title,
                             details: details.isEmpty ? nil : details,
+                            occurredAt: isOccured ? dateOccurred : nil,
                             isAchievement: isAchievement
                         )
 
