@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class LifeItem {
@@ -52,9 +53,24 @@ final class LifeItem {
     }
 }
 
-enum LifeItemType: String, Codable {
+enum LifeItemType: String, Codable, CaseIterable {
     case desire
     case dream
     case experience
     case challenge
+}
+
+extension LifeItemType {
+    var localizedTitle: LocalizedStringKey {
+        switch self {
+        case .desire:
+            "Desire"
+        case .dream:
+            "Dream"
+        case .experience:
+            "Experience"
+        case .challenge:
+            "Challenge"
+        }
+    }
 }

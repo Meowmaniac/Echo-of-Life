@@ -13,6 +13,18 @@ struct LifeItemListView: View {
     @State var viewModel: LifeItemListViewModel
     @State var showCreate = false
     @State private var itemToEdit: LifeItem?
+    @State private var selectedType: LifeItemType?
+    
+    // okay for small dataset
+    var filteredLifeItems: [LifeItem] {
+        guard let selectedType else {
+            return lifeItems
+        }
+
+        return lifeItems.filter {
+            $0.type == selectedType
+        }
+    }
     
     init(repository: LifeItemRepository) {
         _viewModel = State(
@@ -22,7 +34,7 @@ struct LifeItemListView: View {
     
     var body: some View {
         NavigationStack {
-            List(lifeItems, id: \.id) { lifeItem in
+            List(filteredLifeItems, id: \.id) { lifeItem in
                 HStack {
                     NavigationLink {
                         LifeItemDetailView(
@@ -66,6 +78,32 @@ struct LifeItemListView: View {
                             showCreate = true
                     }) {
                         Image(systemName: "plus")
+                    }
+                }
+                ToolbarItem {
+                    Menu {
+                        Button("All") {
+                            selectedType = nil
+                        }
+
+                        ForEach(LifeItemType.allCases, id: \.self) { type in
+                            Button {
+                                selectedType = type
+                            } label: {
+                                HStack {
+                                    Text(type.localizedTitle)
+
+                                    if selectedType == type {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: selectedType == nil
+                            ? "line.3.horizontal.decrease"
+                            : "line.3.horizontal.decrease.circle.fill"
+                        )
                     }
                 }
             }
