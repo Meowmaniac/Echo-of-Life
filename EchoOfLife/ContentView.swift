@@ -12,7 +12,16 @@ struct ContentView: View {
     let lifeItemRepository: LifeItemRepository
 
     var body: some View {
-        LifeItemListView(repository: lifeItemRepository)
+        TabView {
+            LifeItemListView(repository: lifeItemRepository)
+                .tabItem {
+                    Label("Life", systemImage: "circle.grid.2x2")
+                }
+            ValueListView()
+                .tabItem {
+                    Label("Values", systemImage: "heart.fill")
+                }
+        }
     }
 }
 
