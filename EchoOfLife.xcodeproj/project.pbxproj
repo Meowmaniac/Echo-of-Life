@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		32916FCB30766B5F0074B60C /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 32916FCA30766B5F0074B60C /* LICENSE */; };
+		32916FCD30766BC10074B60C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 32916FCC30766BC10074B60C /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		32916F73306AB2EE0074B60C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		32916F63306AB2EC0074B60C /* EchoOfLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EchoOfLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		32916F72306AB2EE0074B60C /* EchoOfLifeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EchoOfLifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		32916F7C306AB2EE0074B60C /* EchoOfLifeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EchoOfLifeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		32916FCA30766B5F0074B60C /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		32916FCC30766BC10074B60C /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -75,6 +82,8 @@
 		32916F5A306AB2EC0074B60C = {
 			isa = PBXGroup;
 			children = (
+				32916FCA30766B5F0074B60C /* LICENSE */,
+				32916FCC30766BC10074B60C /* README.md */,
 				32916F65306AB2EC0074B60C /* EchoOfLife */,
 				32916F75306AB2EE0074B60C /* EchoOfLifeTests */,
 				32916F7F306AB2EE0074B60C /* EchoOfLifeUITests */,
@@ -212,6 +221,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				32916FCD30766BC10074B60C /* README.md in Resources */,
+				32916FCB30766B5F0074B60C /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
