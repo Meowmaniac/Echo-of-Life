@@ -11,8 +11,11 @@ import SwiftData
 struct LifeItemEditView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Query(sort: \Value.name) private var values: [Value]
     
     @Bindable var lifeItem: LifeItem
+    @State private var isOccured = false
+    @State private var dateOccurred = Date()
     
     var body: some View {
         NavigationStack {
@@ -48,6 +51,60 @@ struct LifeItemEditView: View {
                         "Achievement",
                         isOn: $lifeItem.isAchievement
                     )
+                    Toggle("Occured", isOn: $isOccured)
+                    if isOccured {
+                        DatePicker(
+                            "Date",
+                            selection: Binding(
+                                get: { lifeItem.occurredAt ?? Date() },
+                                set: { lifeItem.occurredAt = $0 }
+                            ),
+                            displayedComponents: .date
+                        )
+                    }
+                }
+                
+                Section("Values") {
+                    Menu {
+                        ForEach(values, id: \.id) { value in
+                            Button {
+                                toggleValue(value)
+                            } label: {
+                                HStack {
+                                    Text(value.name)
+
+                                    if lifeItem.values.contains(where: { $0.id == value.id }) {
+                                        Image(systemName: "checkmark")
+                                    }
+                                }
+                            }
+                        }
+                    } label: {
+                        HStack {
+                            Text("Select Values")
+                            Spacer()
+                            Image(systemName: "chevron.up.chevron.down")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    
+                    if !lifeItem.values.isEmpty {
+                        LazyVGrid(
+                            columns: [
+                                GridItem(.adaptive(minimum: 80), spacing: 8)
+                            ],
+                            alignment: .leading,
+                            spacing: 8
+                        ) {
+                            ForEach(lifeItem.values, id: \.id) { value in
+                                Text(value.name)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(.secondary.opacity(0.15))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Edit Life Item")
@@ -64,6 +121,14 @@ struct LifeItemEditView: View {
                     }
                 }
             }
+        }
+    }
+    
+    private func toggleValue(_ value: Value) {
+        if let index = lifeItem.values.firstIndex(where: { $0.id == value.id }) {
+            lifeItem.values.remove(at: index)
+        } else {
+            lifeItem.values.append(value)
         }
     }
 }

@@ -37,7 +37,32 @@ struct ValueDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                Spacer()
+                if !value.lifeItems.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Life Items")
+                            .font(.headline)
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 8) {
+                                ForEach(value.lifeItems, id: \.id) { item in
+                                    HStack {
+                                        Text(item.title)
+                                        
+                                        Spacer()
+                                        
+                                        if item.isAchievement {
+                                            Image(systemName: "star.fill")
+                                                .foregroundStyle(.yellow)
+                                        }
+                                    }
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(.secondary.opacity(0.1))
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                }
+                            }
+                        }
+                    }
+                }
             }
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)

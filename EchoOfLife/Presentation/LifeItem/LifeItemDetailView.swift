@@ -59,6 +59,20 @@ struct LifeItemDetailView: View {
                             Label("Achievement", systemImage: "star.fill")
                         }
                     }
+                    VStack(alignment: .leading, spacing: 12) {
+                        if !lifeItem.values.isEmpty {
+                            Text("Values")
+                                .font(.headline)
+                            
+                            ForEach(lifeItem.values, id: \.id) { value in
+                                Text(value.name)
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 6)
+                                    .background(.secondary.opacity(0.15))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
                 }
                 .padding()
                 .navigationTitle(lifeItem.title)
