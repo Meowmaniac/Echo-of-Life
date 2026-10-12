@@ -10,7 +10,7 @@ import SwiftData
 
 struct LifeItemListView: View {
     @Query(sort: \LifeItem.createdAt, order: .reverse) var lifeItems: [LifeItem]
-    @State var viewModel: LifeItemListViewModel
+    var viewModel: LifeItemViewModel
     @State var showCreate = false
     @State private var itemToEdit: LifeItem?
     @State private var selectedType: LifeItemType?
@@ -26,10 +26,8 @@ struct LifeItemListView: View {
         }
     }
     
-    init(repository: LifeItemRepository) {
-        _viewModel = State(
-            initialValue: LifeItemListViewModel(repository: repository)
-        )
+    init(viewModel: LifeItemViewModel) {
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -39,8 +37,7 @@ struct LifeItemListView: View {
                     NavigationLink {
                         LifeItemDetailView(
                             lifeItem: lifeItem,
-                            onEdit: { itemToEdit = lifeItem },
-                            onDelete: { viewModel.deleteLifeItem(lifeItem) }
+                            viewModel: viewModel
                         )
                     } label: {
                         HStack {
@@ -137,11 +134,11 @@ struct LifeItemListView: View {
     }
 }
 
-#Preview {
-    LifeItemListView(
-        repository: SwiftDataLifeItemRepository(
-            modelContext: PreviewData.container.mainContext
-        )
-    )
-    .modelContainer(PreviewData.container)
-}
+//#Preview {
+//    LifeItemListView(
+//        repository: SwiftDataLifeItemRepository(
+//            modelContext: PreviewData.container.mainContext
+//        )
+//    )
+//    .modelContainer(PreviewData.container)
+//}

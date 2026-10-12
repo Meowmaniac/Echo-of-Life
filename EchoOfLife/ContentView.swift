@@ -10,14 +10,22 @@ import SwiftData
 
 struct ContentView: View {
     let lifeItemRepository: LifeItemRepository
+    @State private var lifeItemViewModel: LifeItemViewModel
 
+    init(lifeItemRepository: LifeItemRepository) {
+        self.lifeItemRepository = lifeItemRepository
+        _lifeItemViewModel = State(
+            initialValue: LifeItemViewModel(repository: lifeItemRepository)
+        )
+    }
+    
     var body: some View {
         TabView {
-            LifeItemListView(repository: lifeItemRepository)
+            LifeItemListView(viewModel: lifeItemViewModel)
                 .tabItem {
                     Label("Life", systemImage: "circle.grid.2x2")
                 }
-            ValueListView()
+            ValueListView(viewModel: lifeItemViewModel)
                 .tabItem {
                     Label("Values", systemImage: "heart.fill")
                 }

@@ -10,12 +10,12 @@ import SwiftUI
 struct LifeItemDetailView: View {
     @Environment(\.dismiss) private var dismiss
     let lifeItem: LifeItem
+    let viewModel: LifeItemViewModel
     
-    let onEdit: () -> Void
-    let onDelete: () -> Void
+    @State private var isShowingEdit = false
+    @State private var isShowingDeleteConfirmation = false
     
     var body: some View {
-        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     if let details = lifeItem.details {
@@ -80,46 +80,59 @@ struct LifeItemDetailView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            onEdit()
+                            isShowingEdit = true
                         } label: {
                             Image(systemName: "pencil")
                         }
                     }
-                    
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(role: .destructive) {
-                            onDelete()
-                            dismiss()
+                            isShowingDeleteConfirmation = true
                         } label: {
                             Image(systemName: "trash")
                         }
                     }
                 }
+                .sheet(isPresented: $isShowingEdit) {
+                    LifeItemEditView(lifeItem: lifeItem)
+                }
+                .confirmationDialog(
+                    "Delete this life item?",
+                    isPresented: $isShowingDeleteConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button("Delete", role: .destructive) {
+                        viewModel.deleteLifeItem(lifeItem)
+                        
+                        if viewModel.errorMessage == nil {
+                            dismiss()
+                        }
+                    }
+                }
             }
         }
-    }
 }
 
-#Preview {
-    LifeItemDetailView(
-        lifeItem:
-            LifeItem(
-                id: UUID(),
-                type: .dream,
-                title: "Travel to Japan",
-                details: "Onsen, ramen, hentai, drift cars. Get IDP license in Ukraine. Visit Akihabara. Cherry blossom season. Trip to Kyoto. Sailor Moon museum. sumimasen, arigatou gozaimasu, doko desu ka, ikura desu ka",
-                createdAt: Calendar.current.date(
-                    from: DateComponents(
-                        year: 2026,
-                        month: 9,
-                        day: 29,
-                        hour: 14,
-                        minute: 30
-                    )
-                )!,
-                isAchievement: false
-            ),
-        onEdit: {},
-        onDelete: {}
-    )
-}
+//#Preview {
+//    LifeItemDetailView(
+//        lifeItem:
+//            LifeItem(
+//                id: UUID(),
+//                type: .dream,
+//                title: "Travel to Japan",
+//                details: "Onsen, ramen, hentai, drift cars. Get IDP license in Ukraine. Visit Akihabara. Cherry blossom season. Trip to Kyoto. Sailor Moon museum. sumimasen, arigatou gozaimasu, doko desu ka, ikura desu ka",
+//                createdAt: Calendar.current.date(
+//                    from: DateComponents(
+//                        year: 2026,
+//                        month: 9,
+//                        day: 29,
+//                        hour: 14,
+//                        minute: 30
+//                    )
+//                )!,
+//                isAchievement: false
+//            ),
+//        onEdit: {},
+//        onDelete: {}
+//    )
+//}

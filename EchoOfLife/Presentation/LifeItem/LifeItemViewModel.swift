@@ -8,7 +8,7 @@
 import Foundation
 
 @Observable
-final class LifeItemListViewModel {
+final class LifeItemViewModel {
     private let repository: LifeItemRepository
     var items: [LifeItem] = []
     var errorMessage: String?

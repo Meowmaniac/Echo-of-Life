@@ -11,6 +11,9 @@ import SwiftData
 struct ValueListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Value.createdAt, order: .reverse) var values: [Value]
+    
+    var viewModel: LifeItemViewModel
+    
     @State var showCreate: Bool = false
     @State var valueToEdit: Value?
     
@@ -20,6 +23,7 @@ struct ValueListView: View {
                 NavigationLink {
                     ValueDetailView(
                         value: value,
+                        lifeItemViewModel: viewModel,
                         onEdit: { valueToEdit = value },
                         onDelete: { delete(value) }
                     )
@@ -83,6 +87,6 @@ struct ValueListView: View {
     }
 }
 
-#Preview {
-    ValueListView()
-}
+//#Preview {
+//    ValueListView()
+//}

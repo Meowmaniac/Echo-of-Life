@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ValueDetailView: View {
     @Environment(\.dismiss) private var dismiss
+    
     var value: Value
+    let lifeItemViewModel: LifeItemViewModel
     
     let onEdit: () -> Void
     let onDelete: () -> Void
@@ -44,20 +46,29 @@ struct ValueDetailView: View {
                         ScrollView {
                             VStack(alignment: .leading, spacing: 8) {
                                 ForEach(value.lifeItems, id: \.id) { item in
-                                    HStack {
-                                        Text(item.title)
-                                        
-                                        Spacer()
-                                        
-                                        if item.isAchievement {
-                                            Image(systemName: "star.fill")
-                                                .foregroundStyle(.yellow)
+                                    NavigationLink {
+                                            LifeItemDetailView(
+                                                lifeItem: item,
+                                                viewModel: lifeItemViewModel
+                                            )
+                                        } label: {
+                                            HStack {
+                                                Text(item.title)
+
+                                                Spacer()
+
+                                                if item.isAchievement {
+                                                    Image(systemName: "star.fill")
+                                                        .foregroundStyle(.yellow)
+                                                }
+                                            }
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 8)
+                                            .background(.secondary.opacity(0.1))
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                            .contentShape(Rectangle())
                                         }
-                                    }
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 8)
-                                    .background(.secondary.opacity(0.1))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .buttonStyle(.plain)
                                 }
                             }
                         }
