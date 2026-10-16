@@ -19,7 +19,7 @@ struct ValueDetailView: View {
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 16) {
-                if let details = value.details {
+                if let details = value.details, details != "" {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Details")
                             .font(.headline)

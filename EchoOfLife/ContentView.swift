@@ -29,6 +29,10 @@ struct ContentView: View {
                 .tabItem {
                     Label("Values", systemImage: "heart.fill")
                 }
+            ReflectionListView()
+                .tabItem {
+                    Label("Reflections", systemImage: "pencil.and.outline")
+                }
         }
     }
 }

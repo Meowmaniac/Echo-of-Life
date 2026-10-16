@@ -17,9 +17,23 @@ struct ValueListView: View {
     @State var showCreate: Bool = false
     @State var valueToEdit: Value?
     
+    @State private var showArchived: Bool = false
+    
+    var filteredValues: [Value] {
+        if showArchived {
+            return values.filter {
+                $0.archivedAt != nil
+            }
+        } else {
+            return values.filter {
+                $0.archivedAt == nil
+            }
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            List(values, id: \.id) { value in
+            List(filteredValues, id: \.id) { value in
                 NavigationLink {
                     ValueDetailView(
                         value: value,
@@ -31,22 +45,31 @@ struct ValueListView: View {
                     Text(value.name)
                 }
                 .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
+                    Button {
                         delete(value)
                     } label: {
-                        Label("Delete", systemImage: "trash")
+                        Image(systemName: "trash")
                     }
+                    .tint(.red)
                 }
                 .swipeActions(edge: .leading) {
                     Button {
                         valueToEdit = value
                     } label: {
-                        Label("Edit", systemImage: "pencil")
+                        Image(systemName: "pencil")
                     }
+                    .tint(.blue)
                 }
             }
             .navigationTitle("Values")
             .toolbar {
+                ToolbarItem {
+                    Button {
+                        showArchived.toggle()
+                    } label: {
+                        Image(systemName: showArchived ? "archivebox.circle.fill" : "archivebox.circle")
+                    }
+                }
                 ToolbarItem {
                     Button {
                         showCreate = true
