@@ -10,8 +10,8 @@ import SwiftData
 
 struct LifeItemCreateView: View {
     @Environment(\.dismiss) private var dismiss
-    
-    @Query(sort: \Value.name) private var values: [Value]
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: #Predicate<Value> { $0.archivedAt == nil }, sort: \Value.name) private var values: [Value]
 
     @State private var title = ""
     @State private var details = ""
@@ -20,6 +20,7 @@ struct LifeItemCreateView: View {
     @State private var isOccured = false
     @State private var dateOccurred = Date()
     @State private var selectedValues: [Value] = []
+    @State private var reflectionText = ""
 
     let onSave: (LifeItem) -> Void
 
@@ -98,6 +99,14 @@ struct LifeItemCreateView: View {
                         }
                     }
                 }
+                Section("Reflection") {
+                    TextField(
+                        "What are your thoughts about this?",
+                        text: $reflectionText,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...6)
+                }
             }
             .navigationTitle("New Life Item")
             .toolbar {
@@ -119,6 +128,22 @@ struct LifeItemCreateView: View {
                         )
 
                         onSave(item)
+                        
+                        if !reflectionText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                            let reflection = Reflection(
+                                text: reflectionText.trimmingCharacters(in: .whitespacesAndNewlines),
+                                lifeItem: item
+                            )
+                            
+                            modelContext.insert(reflection)
+
+                            do {
+                                try modelContext.save()
+                            } catch {
+                                print("Can't save the context: \(error.localizedDescription)")
+                            }
+                        }
+                        
                         dismiss()
                     }
                     .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

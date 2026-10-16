@@ -14,9 +14,13 @@ struct ReflectionListView: View {
     @State private var showCreate: Bool = false
     @State private var reflectionToEdit: Reflection?
     
+    private var sortedReflections: [Reflection] {
+        reflections.sorted { $0.sortDate > $1.sortDate }
+    }
+    
     var body: some View {
         NavigationStack {
-            List(reflections, id: \.id) { reflection in
+            List(sortedReflections, id: \.id) { reflection in
                 NavigationLink {
                     ReflectionDetailView(
                         reflection: reflection,
@@ -25,7 +29,7 @@ struct ReflectionListView: View {
                     )
                 } label : {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(reflection.createdAt.formatted(date: .numeric, time: .omitted))
+                        Text((reflection.periodStart ?? reflection.createdAt).formatted(date: .numeric, time: .omitted))
                             .font(.body)
                             .foregroundStyle(.secondary)
                         Text(reflection.text)

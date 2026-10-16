@@ -11,11 +11,22 @@ import SwiftData
 struct LifeItemEditView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Value.name) private var values: [Value]
+    @Query(filter: #Predicate<Value> { $0.archivedAt == nil }, sort: \Value.name) private var values: [Value]
     
     @Bindable var lifeItem: LifeItem
     @State private var isOccured = false
     @State private var dateOccurred = Date()
+    
+    @Query(sort: \Reflection.createdAt, order: .reverse)
+    private var reflections: [Reflection]
+
+    @State private var reflectionText = ""
+    @State private var reflectionToEdit: Reflection?
+    @State private var isShowingReflectionEdit = false
+    
+    private var linkedReflections: [Reflection] {
+        reflections.filter { $0.lifeItem?.id == lifeItem.id }
+    }
     
     var body: some View {
         NavigationStack {
@@ -106,6 +117,55 @@ struct LifeItemEditView: View {
                         }
                     }
                 }
+                Section("Reflections") {
+                    HStack(alignment: .bottom, spacing: 12) {
+                        TextField(
+                            "What are your thoughts about this?",
+                            text: $reflectionText,
+                            axis: .vertical
+                        )
+                        .lineLimit(3...6)
+                        Button("Add") {
+                            addReflection()
+                        }
+                        .disabled(
+                            reflectionText.trimmingCharacters(
+                                in: .whitespacesAndNewlines
+                            ).isEmpty
+                        )
+                    }
+                }
+                
+                ForEach(linkedReflections, id: \.id) { reflection in
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(
+                            reflection.createdAt,
+                            format: .dateTime.day().month().year()
+                        )
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        
+                        Text(reflection.text)
+                            .lineLimit(3)
+                    }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            reflectionToEdit = reflection
+                            isShowingReflectionEdit = true
+                        } label: {
+                            Image(systemName: "pencil")
+                        }
+                        .tint(.blue)
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            deleteReflection(reflection)
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        .tint(.red)
+                    }
+                }
             }
             .navigationTitle("Edit Life Item")
             .navigationBarTitleDisplayMode(.inline)
@@ -129,6 +189,38 @@ struct LifeItemEditView: View {
             lifeItem.values.remove(at: index)
         } else {
             lifeItem.values.append(value)
+        }
+    }
+    
+    private func addReflection() {
+        let text = reflectionText.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+
+        guard !text.isEmpty else { return }
+
+        let reflection = Reflection(
+            text: text,
+            lifeItem: lifeItem
+        )
+
+        modelContext.insert(reflection)
+
+        do {
+            try modelContext.save()
+            reflectionText = ""
+        } catch {
+            print("Failed to save Reflection: \(error)")
+        }
+    }
+
+    private func deleteReflection(_ reflection: Reflection) {
+        modelContext.delete(reflection)
+
+        do {
+            try modelContext.save()
+        } catch {
+            print("Failed to delete Reflection: \(error)")
         }
     }
 }

@@ -22,11 +22,14 @@ final class LifeItem {
     var isAchievement: Bool
     
     var parentItem: LifeItem?
+    
     @Relationship(inverse: \LifeItem.parentItem)
     var childItems: [LifeItem]
-    
     @Relationship
     var values: [Value]
+    @Relationship(inverse: \Reflection.lifeItem)
+    var reflections: [Reflection]
+    
     
     init(
         id: UUID = UUID(),
@@ -38,7 +41,8 @@ final class LifeItem {
         isAchievement: Bool = false,
         values: [Value] = [],
         parentItem: LifeItem? = nil,
-        childItems: [LifeItem] = []
+        childItems: [LifeItem] = [],
+        reflections: [Reflection] = []
     ) {
         self.id = id
         self.type = type
@@ -50,6 +54,7 @@ final class LifeItem {
         self.values = values
         self.parentItem = parentItem
         self.childItems = childItems
+        self.reflections = reflections
     }
 }
 

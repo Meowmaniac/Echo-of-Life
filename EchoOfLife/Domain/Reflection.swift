@@ -21,6 +21,10 @@ final class Reflection {
     
     var lifeItem: LifeItem?
     
+    var sortDate: Date {
+        periodStart ?? createdAt
+    }
+    
     init(
         id: UUID = UUID(),
         text: String,
